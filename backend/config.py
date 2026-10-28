@@ -10,6 +10,9 @@ if IS_PRODUCTION:
     # Some hosts hand out "postgres://", but SQLAlchemy needs "postgresql://".
     if _db_url.startswith("postgres://"):
         _db_url = _db_url.replace("postgres://", "postgresql://", 1)
+    # Name the driver we installed (psycopg2), because SQLAlchemy 2.1 defaults to a newer one.
+    if _db_url.startswith("postgresql://"):
+        _db_url = _db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
     for _name in ("SECRET_KEY", "JWT_SECRET_KEY", "FRONTEND_ORIGIN"):
         if not os.environ.get(_name):
             raise RuntimeError(f"{_name} must be set when DATABASE_URL is set")
